@@ -2,7 +2,7 @@ import smtplib
 from os import environ
 import feedparser as fp
 from flask import Flask
-from time import mktime
+from time import mktime, sleep
 from datetime import datetime
 from datetime import datetime
 from email.mime.text import MIMEText
@@ -100,6 +100,7 @@ def send_covid_update(text: str, recievers: Union[List[str], Tuple[str], str], l
 def listen_for_updates():
     LAST_PUBLISHED = datetime.now()
     while True:
+        sleep(10)
         rss_feed = load_entries()
         last_entry = rss_feed[0]
         if datetime.fromtimestamp(mktime(last_entry["published_parsed"])) < LAST_PUBLISHED:
