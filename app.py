@@ -1,10 +1,12 @@
+import os
+from flask import render_template
 import smtplib
 from os import environ
 import feedparser as fp
 from flask import Flask
+from datetime import datetime
+from datetime import datetime
 from time import mktime, sleep
-from datetime import datetime
-from datetime import datetime
 from email.mime.text import MIMEText
 from feedparser.util import FeedParserDict
 from email.mime.multipart import MIMEMultipart
@@ -127,5 +129,12 @@ app.config.from_object(FlaskConfig)
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def default(path):
+    full_path = os.path.join("static", "images", "ouroboros.gif")
+    return render_template("ouroboros.html", user_image=full_path)
+
 if __name__ == '__main__':
     app.run()
