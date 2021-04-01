@@ -1,15 +1,16 @@
-from email.message import EmailMessage, Message
-from os import environ
-from typing import List, Optional, Tuple, Union
-import feedparser as fp
-from email.mime.multipart import MIMEMultipart
-from feedparser.util import FeedParserDict
 import smtplib
+from os import environ
+import feedparser as fp
+from flask import Flask
+from time import mktime
+from datetime import datetime
 from datetime import datetime
 from email.mime.text import MIMEText
-from datetime import datetime
+from feedparser.util import FeedParserDict
+from email.mime.multipart import MIMEMultipart
+from typing import List, Optional, Tuple, Union
+from email.message import EmailMessage, Message
 from flask_apscheduler import APScheduler, scheduler
-from flask import Flask
 
 def load_entries():
     feed: FeedParserDict = fp.parse(
@@ -124,4 +125,6 @@ app: Flask = Flask(__name__)
 app.config.from_object(FlaskConfig)
 scheduler = APScheduler()
 scheduler.init_app(app)
-app.run()
+
+if __name__ == '__main__':
+    app.run()
