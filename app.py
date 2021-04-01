@@ -106,12 +106,12 @@ def listen_for_updates():
         rss_feed = load_entries()
         last_entry = rss_feed[0]
         if datetime.fromtimestamp(mktime(last_entry["published_parsed"])) < LAST_PUBLISHED:
-            print("[INFO]: No new records!")
             listen_for_updates()
         recievers: List[str] = environ["reciever_emails"].split(";")
         send_covid_update(
             last_entry["summary_detail"], recievers=recievers, link=last_entry["link"])
         LAST_PUBLISHED = datetime.now()
+        print("\033[92m[INFO]: New record found!\033[92m")
         listen_for_updates()
 
 
@@ -130,11 +130,13 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def default(path):
     full_path = os.path.join("static", "images", "ouroboros.gif")
     return render_template("ouroboros.html", user_image=full_path)
+
 
 if __name__ == '__main__':
     app.run()
