@@ -126,7 +126,11 @@ app.config.from_object(FlaskConfig)
 scheduler = APScheduler()
 scheduler.init_app(app)
 
-send_covid_update("New version deployed", "mtoth575@gmail.com")
+app.route("/")
+def index():
+    send_covid_update("Website works!", "mtoth575@gmail.com")
+    return "<H1> RUVZ RSS </ H1>"
+
 
 if __name__ == '__main__':
     app.run()
