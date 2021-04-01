@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import smtplib
 from os import environ
 import feedparser as fp
@@ -13,6 +11,7 @@ from email.mime.multipart import MIMEMultipart
 from typing import List, Optional, Tuple, Union
 from email.message import EmailMessage, Message
 from flask_apscheduler import APScheduler, scheduler
+
 
 def load_entries():
     feed: FeedParserDict = fp.parse(
@@ -97,7 +96,6 @@ def send_covid_update(text: str, recievers: Union[List[str], Tuple[str], str], l
             print(f"[ERROR]: {str(err)}")
     sesion.close()
 
-LAST_PUBLISHED = datetime.now()
 
 def listen_for_updates():
     LAST_PUBLISHED = datetime.now()
@@ -106,32 +104,27 @@ def listen_for_updates():
         last_entry = rss_feed[0]
         if datetime.fromtimestamp(mktime(last_entry["published_parsed"])) < LAST_PUBLISHED:
             print("[INFO]: No new records!")
-            return
-        # listen_for_updates()
+            listen_for_updates()
         recievers: List[str] = environ["reciever_emails"].split(";")
         send_covid_update(
-                last_entry["summary_detail"], recievers=recievers, link=last_entry["link"])
+            last_entry["summary_detail"], recievers=recievers, link=last_entry["link"])
         LAST_PUBLISHED = datetime.now()
+        listen_for_updates()
+
 
 class FlaskConfig(object):
     JOBS = [
         {
             "id": "listen_for_updates",
             "func": "app:listen_for_updates",
-            "trigger": "interval",
-            "seconds": 10
         }
     ]
+
 
 app: Flask = Flask(__name__)
 app.config.from_object(FlaskConfig)
 scheduler = APScheduler()
 scheduler.init_app(app)
-
-@app.route("/")
-def index():
-    return "<H1> RUVZ RSS </ H1>"
-
-
+scheduler.start()
 if __name__ == '__main__':
     app.run()
