@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import smtplib
 from os import environ
 import feedparser as fp
