@@ -126,5 +126,7 @@ app.config.from_object(FlaskConfig)
 scheduler = APScheduler()
 scheduler.init_app(app)
 
+send_covid_update("New version deployed", "mtoth575@gmail.com")
+
 if __name__ == '__main__':
     app.run()
