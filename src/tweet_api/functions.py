@@ -98,9 +98,9 @@ def make_tweet(text: str, link:str=None) -> None:
         return
     soup: BeautifulSoup = BeautifulSoup(text, features="lxml")
     tweet: str = ""
-    anchor_link: str = ""
+    anchor_link: Optional[str] = contains_link(text)
     #Check for links hidden in achor tags
-    if anchor_link := contains_link(text):
+    if anchor_link:
         anchor_link = get_short_link(anchor_link)
         text = shorten_tweet(soup.get_text(), offset=len(anchor_link))
         tweet: str = f"{text}\n\n{anchor_link}"    
