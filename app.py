@@ -3,12 +3,13 @@ from flask import Flask
 from flask import render_template
 from flask_apscheduler import APScheduler, scheduler
 
+from src import listen_for_updates
 
 class FlaskConfig(object):
     JOBS = [
         {
             "id": "Update RSS",
-            "func": "src:listen_for_updates",
+            "func": "app:listen_for_updates",
         }
     ]
 

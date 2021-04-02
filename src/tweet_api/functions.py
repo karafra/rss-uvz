@@ -7,7 +7,6 @@ from os import environ
 from dotenv import load_dotenv
 from tweepy.api import API
 from bs4 import BeautifulSoup
-
 load_dotenv()
 
 def init_api() -> Optional[API]:
