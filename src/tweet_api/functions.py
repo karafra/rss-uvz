@@ -1,13 +1,12 @@
-from typing import Optional, List, TypedDict, Any, Union
+from typing import Optional, List, TypedDict, Any
 import tweepy
 from time import struct_time
 import feedparser as fp
 from feedparser import FeedParserDict
 from os import environ
-from dotenv import load_dotenv, main
+from dotenv import load_dotenv
 from tweepy.api import API
 from bs4 import BeautifulSoup
-from tweepy.models import Model, Status
 
 load_dotenv()
 

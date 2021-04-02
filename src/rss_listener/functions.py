@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 from feedparser.util import FeedParserDict
 from email.mime.multipart import MIMEMultipart
 from email.message import EmailMessage, Message
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
+from typing import Any, List, Optional, Tuple, TypedDict, Union
 
 
 class ParsedEntry(TypedDict):
