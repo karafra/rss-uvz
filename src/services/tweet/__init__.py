@@ -1,1 +1,1 @@
-from .functions import make_tweet
+from .TwitterService import TwitterService, TweetObject, TwitterConfig
