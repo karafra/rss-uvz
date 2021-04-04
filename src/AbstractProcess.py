@@ -1,17 +1,17 @@
 from multiprocessing import Queue
 from abc import ABC, abstractmethod
-from typing import Union, Callable, Any
+from typing import Optional, Union, Callable, Any
 from multiprocessing.context import Process
 
 
 class AbstractProcess(Process, ABC):
 
-    def __init__(self, target: Union[Callable[..., Any]]):
+    def __init__(self, target: Optional[Union[Callable[..., Any]]]=None):
         super().__init__()
         self.daemon: bool = True
         self.queue: Queue = Queue()
         self.args_queue: Queue = Queue()
-        self.target: Union[Callable[..., Any]] = target
+        self.target: Optional[Union[Callable[..., Any]]] = target
         self.process = Process(target=self._thread_function)
         self.process.start()
 

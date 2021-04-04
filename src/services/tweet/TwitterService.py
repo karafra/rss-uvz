@@ -30,7 +30,7 @@ class TwitterConfig(object):
 
 class TwitterService(IService):
     
-    class _TWITTER_PROCESS(AbstractProcess):
+    class _PROCESS(AbstractProcess):
     
 
         @staticmethod
@@ -80,13 +80,13 @@ class TwitterService(IService):
             soup: BeautifulSoup = BeautifulSoup(text, features="lxml")
             tweet: str = ""
             link = self.get_short_link(link)
-            text = TwitterService._shorten_tweet(
+            text = TwitterService._PROCESS._shorten_tweet(
                 soup.get_text(), offset=len(link))
             tweet = f"{text}\n\n{link}"
             self.api.update_status(tweet)
             logging.info("Tweet published ({tweet or text})")
 
-        def __init__(self, target: Callable[..., Any], twiter_config: TwitterConfig):
+        def __init__(self, twiter_config: TwitterConfig, target: Callable[..., Any] =None):
             self.api: Optional[API] = self.init_api(twiter_config)
             super().__init__(target)
 
@@ -94,6 +94,22 @@ class TwitterService(IService):
             while True:
                 obj: TweetObject = self.args_queue.get()
                 self.make_tweet(obj.text, obj.link)
+
+        @staticmethod
+        def _shorten_tweet(text: str, offset: int = 0) -> str:
+            """
+            Shorten tweet if its longer than 280 characters.
+
+            :param text: text of tweet
+            :type text: str
+            :param offset: length of aditional texts in tweet
+            :type offset: int
+
+            :return: str
+            """
+            if len(text) < (280 - 6 - offset):
+                return text + " ..."
+            return TwitterService._PROCESS._shorten_tweet(" ".join((text.split(" ")[:-1])), offset=offset)
 
     def __load_environmnet_variables(self) -> "TwitterConfig":
         try:
@@ -116,30 +132,13 @@ class TwitterService(IService):
         self.twitter_config: TwitterConfig = self.__load_environmnet_variables()
         super().__init__()
 
-    @staticmethod
-    def _shorten_tweet(text: str, offset: int = 0) -> str:
-        """
-        Shorten tweet if its longer than 280 characters.
-
-        :param text: text of tweet
-        :type text: str
-        :param offset: length of aditional texts in tweet
-        :type offset: int
-
-        :return: str
-        """
-        if len(text) < (280 - 6 - offset):
-            return text + " ..."
-        return TwitterService._shorten_tweet(" ".join((text.split(" ")[:-1])), offset=offset)
-
     def start_service(self):
-        self.process = self._TWITTER_PROCESS(
-            self._shorten_tweet, self.twitter_config)
+        self.process = self._PROCESS(self.twitter_config)
 
     def stop_service(self):
         self.process._stop()
 
-    def make_tweet(self, tweet: TweetObject):
+    def interact(self, tweet: TweetObject):
         self.process.args_queue.put(tweet)
 
 if __name__ == "__main__":
@@ -148,3 +147,4 @@ if __name__ == "__main__":
     service.start_service()
     while True:
         pass
+
