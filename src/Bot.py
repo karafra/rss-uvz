@@ -81,12 +81,12 @@ class Bot(object):
     async def __start(self) -> None:
         self.start_service("email")
         self.start_service("rss")
-        #self.start_service("tweet")
+        self.start_service("tweet")
         while True:
             entry: RSSService.ParsedEntry = await self.__rss_service.interact()
             self.__email_service.interact(entry["summary_detail"])
-        #    self.__tweet_service.interact(TweetObject(
-        #        entry["summary_detail"], entry["link"]))
+            self.__tweet_service.interact(TweetObject(
+                entry["summary_detail"], entry["link"]))
             sleep(10)
 
     def start(self):
