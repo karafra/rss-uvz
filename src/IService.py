@@ -1,10 +1,13 @@
-from abc import ABC, abstractmethod, abstractproperty
-import logging
+from abc import ABC, abstractmethod
+from src.AbstractProcess import AbstractProcess
+from typing import Type
 
 class IService(ABC):
 
-    __logger = logging.getLogger(__name__) 
-
+    @property
+    @abstractmethod
+    def _THREAD(self) -> Type[AbstractProcess]: ...
+    
     @abstractmethod
     def start_service(self): ...
 
