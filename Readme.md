@@ -32,7 +32,7 @@ Currently each service is running as separate process run all from main thread. 
 * Each new service has to implement IService interface
 * After each new service has to have its coresponding test suite
 * No need to ask for persmission when adding new library, but remember to do `pip3 freeze > requirements.txt`, otherwise build will fail
-* Project is developed on Python 3.8, as of now I don't see reason whz this should change
+* Project is developed on Python 3.8, as of now I don't see reason why this should change
 
 <a href="mailto:mtoth575@gmail.com?subject=[Github]%20ÚVZ%20BOT%20?"><img src="https://img.shields.io/badge/gmail-%23DD0031.svg?&style=for-the-badge&logo=gmail&logoColor=white"/></a>
 ![version](https://img.shields.io/badge/version-1.0.0-blue)
