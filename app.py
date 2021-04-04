@@ -1,10 +1,22 @@
 import os
+import requests
+from random import randint
+from time import sleep
 from src.Bot import Bot
 from flask import Flask
 from flask import render_template
+from multiprocessing import Process
 from flask_apscheduler import APScheduler
 
-def bot():
+def keep_dyno_awake() -> None:
+    url: str = os.environ["BASE_URL"]
+    while True:
+        requests.get(url)
+        sleep(randint(0, 55))
+            
+
+def bot() -> None:
+    Process(target=keep_dyno_awake).start()
     bot: Bot = Bot()
     bot.start()
     try:
