@@ -1,3 +1,5 @@
+from src.AbstractProcess import AbstractProcess
+from src.IService import IService
 import tweepy
 import logging
 from tweepy import api
@@ -5,8 +7,16 @@ from os import environ
 from tweepy.api import API
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from src import IService, AbstractProcess
 from typing import Optional, Any, Callable
+
+
+
+
+class TweetObject(object):
+    def __init__(self, text, link) -> None:
+        self.text = text
+        self.link = link
+        super().__init__()
 
 
 class TwitterConfig(object):
@@ -18,16 +28,10 @@ class TwitterConfig(object):
         super().__init__()
 
 
-class TweetObject(object):
-    def __init__(self, text, link) -> None:
-        self.text = text
-        self.link = link
-        super().__init__()
-
-
 class TwitterService(IService):
-
+    
     class _TWITTER_PROCESS(AbstractProcess):
+    
 
         @staticmethod
         def init_api(config: TwitterConfig) -> Optional[API]:
@@ -79,7 +83,7 @@ class TwitterService(IService):
             text = TwitterService._shorten_tweet(
                 soup.get_text(), offset=len(link))
             tweet = f"{text}\n\n{link}"
-            api.update_status(tweet)
+            self.api.update_status(tweet)
             logging.info("Tweet published ({tweet or text})")
 
         def __init__(self, target: Callable[..., Any], twiter_config: TwitterConfig):
@@ -91,7 +95,7 @@ class TwitterService(IService):
                 obj: TweetObject = self.args_queue.get()
                 self.make_tweet(obj.text, obj.link)
 
-    def __load_environmnet_variables(self) -> TwitterConfig:
+    def __load_environmnet_variables(self) -> "TwitterConfig":
         try:
             return TwitterConfig(
                 environ["API_KEY"],
@@ -135,6 +139,8 @@ class TwitterService(IService):
     def stop_service(self):
         self.process._stop()
 
+    def make_tweet(self, tweet: TweetObject):
+        self.process.args_queue.put(tweet)
 
 if __name__ == "__main__":
     #Code for quick tesing 

@@ -1,6 +1,7 @@
+from email.mime import text
 import logging
 import smtplib
-from os import environ
+from os import environ, link
 from typing import List, Optional
 from datetime import datetime
 from dotenv import load_dotenv
@@ -21,6 +22,12 @@ class EmailService(IService):
     """
     STMP_PORT: int = 587
     SMTP_URL: str = "smtp.gmail.com"
+
+    class _EmailObj(object):
+        def __init__(self, text: str, link: Optional[str]) -> None:
+            self.text: str = text
+            self.link: Optional[str] = link
+            super().__init__()
 
     class _EMAIL_PROCESS(AbstractProcess):
 
@@ -146,7 +153,7 @@ class EmailService(IService):
         </html>
         """, "html")
 
-    def _build_email(self, text: str, link: Optional[str] = None) -> Message:
+    def _build_email(self, email_obj: "EmailService._EmailObj") -> Message:
         """
         Builds covid update email in html form.
 
@@ -159,14 +166,15 @@ class EmailService(IService):
         """
         msg: Message = MIMEMultipart("alternative")
         msg['Subject'] = f"ÚVZ update from {datetime.now()}"
-        if link:
-            msg.attach(self.__email_with_html_body_and_link(text, link=link))
+        if email_obj.link:
+            msg.attach(self.__email_with_html_body_and_link(email_obj.text, link=email_obj.link))
         else:
-            msg.attach(self.__email_with_html_body(text))
+            msg.attach(self.__email_with_html_body(email_obj.text))
         return msg
 
-    def send_mail(self, text: str) -> None:
-        self.process.args_queue.put(text)
+    def send_mail(self, text: str, link: Optional[str] = None) -> None:
+        obj: "EmailService._EmailObj" = self._EmailObj(text, link or None) 
+        self.process.args_queue.put(obj)
 
     def start_service(self) -> None:
         """Start email service, as new process."""

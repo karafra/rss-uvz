@@ -1,5 +1,4 @@
-from queue import Queue as qq
-from multiprocessing import Queue as mpq
+from multiprocessing import Queue
 from abc import ABC, abstractmethod
 from typing import Union, Callable, Any
 from multiprocessing.context import Process
@@ -10,8 +9,8 @@ class AbstractProcess(Process, ABC):
     def __init__(self, target: Union[Callable[..., Any]]):
         super().__init__()
         self.daemon: bool = True
-        self.queue: mpq = mpq()
-        self.args_queue: qq = qq()
+        self.queue: Queue = Queue()
+        self.args_queue: Queue = Queue()
         self.target: Union[Callable[..., Any]] = target
         self.process = Process(target=self._thread_function)
         self.process.start()
