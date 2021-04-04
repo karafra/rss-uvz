@@ -81,12 +81,12 @@ class Bot(object):
     async def __start(self) -> None:
         self.start_service("email")
         self.start_service("rss")
-        self.start_service("tweet")
+        #self.start_service("tweet")
         while True:
             entry: RSSService.ParsedEntry = await self.__rss_service.interact()
             self.__email_service.interact(entry["summary_detail"])
-            self.__tweet_service.interact(TweetObject(
-                entry["summary_detail"], entry["link"]))
+        #    self.__tweet_service.interact(TweetObject(
+        #        entry["summary_detail"], entry["link"]))
             sleep(10)
 
     def start(self):
@@ -95,4 +95,10 @@ class Bot(object):
 
 if __name__ == '__main__':
     bot: Bot = Bot()
-    bot.start_service("rss")
+    bot.start()
+    try:
+        while True: ...
+    except KeyboardInterrupt:
+        bot.stop_service("email")
+        bot.stop_service("rss")
+        bot.stop_service("tweet")
