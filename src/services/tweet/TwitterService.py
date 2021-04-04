@@ -133,7 +133,8 @@ class TwitterService(IService):
         super().__init__()
 
     def start_service(self):
-        self.process = self._PROCESS(self.twitter_config)
+        if not self.process:
+            self.process = self._PROCESS(self.twitter_config)
 
     def stop_service(self):
         self.process._stop()

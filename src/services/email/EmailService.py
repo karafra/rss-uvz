@@ -178,8 +178,9 @@ class EmailService(IService):
 
     def start_service(self) -> None:
         """Start email service, as new process."""
-        self.process = self._PROCESS(
-            address=self.address, password=self.password)
+        if not self.process:
+            self.process = self._PROCESS(
+                address=self.address, password=self.password)
 
     def stop_service(self) -> None:
         """Stop email service, and coresponding process."""

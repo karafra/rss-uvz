@@ -42,18 +42,18 @@ class RSSService(IService):
                 })
             return out_dict
 
-        def __listen_for_updates(self) -> Optional["RSSService.ParsedEntry"]:
+        def __listen_for_updates(self, last_published: datetime=None) -> Optional["RSSService.ParsedEntry"]:
             """
             Listens for updates in rss feed. When the feed updated, sends mail to 
             all users specified in 'recievers' environment variable. Feed
             is refreshed every 10 seconds.
             :returns: None
             """
-            LAST_PUBLISHED = datetime.now()
+            LAST_PUBLISHED = last_published or datetime.now()
             last_rss_entry = self.__load_entries()[0]
             if datetime.fromtimestamp(mktime(last_rss_entry["published_parsed"])) < LAST_PUBLISHED:
                 sleep(10)
-                return None
+                return self.__listen_for_updates(last_published=last_published)
             LAST_PUBLISHED = datetime.now()
             logging.info(f"Found new entry {last_rss_entry}")
             return last_rss_entry
@@ -63,10 +63,11 @@ class RSSService(IService):
             to construtor, and stores results in queue.
             """
             while True:
-                self.queue.put(self.__load_entries()[0])
+                self.queue.put(self.__listen_for_updates())
 
     def start_service(self):
-        self.process = self._PROCESS()
+        if not self.process:
+            self.process = self._PROCESS()
 
     def stop_service(self):
         self.process._stop()
@@ -76,6 +77,7 @@ class RSSService(IService):
             if rv := self.process.queue.get():
                 self.logger.info(f"New record found: {rv}")
                 return rv 
+            print(rv)
             await asyncio.sleep(10)
 
 if __name__ == "__main__":

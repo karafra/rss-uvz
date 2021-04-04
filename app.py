@@ -2,7 +2,7 @@ import os
 import requests
 from random import randint
 from time import sleep
-from src.Bot import Bot
+from src.Bot import Bot, Config
 from flask import Flask
 from flask import render_template
 from multiprocessing import Process
@@ -13,11 +13,18 @@ def keep_dyno_awake() -> None:
     while True:
         requests.get(url)
         sleep(randint(0, 55))
-            
+
+class BotConfig(Config):
+    SERVICES = {
+        "rss": True, 
+        "tweet": True, 
+        "email": True 
+    }        
 
 def bot() -> None:
+
     Process(target=keep_dyno_awake).start()
-    bot: Bot = Bot()
+    bot: Bot = Bot(config=BotConfig())
     bot.start()
     try:
         while True: ...
