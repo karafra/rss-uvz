@@ -1,15 +1,15 @@
+import logging
+import asyncio
 from typing import Any
-import inspect
-from threading import Thread
 import feedparser as fp
+from threading import Thread
 from datetime import datetime
 from src.IService import IService
 from feedparser.util import FeedParserDict
-import logging
-from typing import Any, List, Optional, TypedDict
 from time import sleep, mktime, struct_time
 from src.AbstractProcess import AbstractProcess
-import asyncio
+from typing import Any, List, Optional, TypedDict
+
 
 class RSSService(IService):
     logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ class RSSService(IService):
                 })
             return out_dict
 
-        def __listen_for_updates(self, last_published: datetime=None) -> Optional["RSSService.ParsedEntry"]:
+        def __listen_for_updates(self, last_published: datetime = None) -> Optional["RSSService.ParsedEntry"]:
             """
             Listens for updates in rss feed. When the feed updated, sends mail to 
             all users specified in 'recievers' environment variable. Feed
@@ -57,6 +57,7 @@ class RSSService(IService):
             LAST_PUBLISHED = datetime.now()
             logging.info(f"Found new entry {last_rss_entry}")
             return last_rss_entry
+
         def _thread_function(self) -> None:
             """
             Continuously runs function supplied in target argument
@@ -76,9 +77,10 @@ class RSSService(IService):
         while True:
             if rv := self.process.queue.get():
                 self.logger.info(f"New record found: {rv}")
-                return rv 
+                return rv
             print(rv)
             await asyncio.sleep(10)
+
 
 if __name__ == "__main__":
     import threading
@@ -105,4 +107,3 @@ if __name__ == "__main__":
             th.join()
             print(f"Thread {th} joined with {threading.current_thread()}")
             break
-            

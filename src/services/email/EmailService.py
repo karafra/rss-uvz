@@ -1,13 +1,10 @@
-from email.mime import text
-import logging
 import smtplib
-from os import environ, link
-from typing import List, Optional
+from os import environ
+from typing import Optional
 from datetime import datetime
 from dotenv import load_dotenv
 from src.IService import IService
 from email.message import Message
-from abc import ABC, abstractmethod
 from email.mime.text import MIMEText
 from typing import Union, Callable, Any
 from email.mime.multipart import MIMEMultipart

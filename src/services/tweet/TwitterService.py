@@ -1,15 +1,12 @@
-from src.AbstractProcess import AbstractProcess
-from src.IService import IService
 import tweepy
 import logging
-from tweepy import api
 from os import environ
 from tweepy.api import API
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from src.IService import IService
 from typing import Optional, Any, Callable
-
-
+from src.AbstractProcess import AbstractProcess
 
 
 class TweetObject(object):
@@ -29,9 +26,8 @@ class TwitterConfig(object):
 
 
 class TwitterService(IService):
-    
+
     class _PROCESS(AbstractProcess):
-    
 
         @staticmethod
         def init_api(config: TwitterConfig) -> Optional[API]:
@@ -60,7 +56,8 @@ class TwitterService(IService):
             """
             response = self.api.update_status(link)
             # For some fucking reason VScode decided that this code will throw error ...
-            self.api.destroy_status(id=response.id_str) # pylint: disable=cannot-access-member
+            self.api.destroy_status(
+                id=response.id_str)  # pylint: disable=cannot-access-member
             # Same as above, I have no idea why ...
             return response.text
 
@@ -86,7 +83,7 @@ class TwitterService(IService):
             self.api.update_status(tweet)
             logging.info("Tweet published ({tweet or text})")
 
-        def __init__(self, twiter_config: TwitterConfig, target: Callable[..., Any] =None):
+        def __init__(self, twiter_config: TwitterConfig, target: Callable[..., Any] = None):
             self.api: Optional[API] = self.init_api(twiter_config)
             super().__init__(target)
 
@@ -142,10 +139,10 @@ class TwitterService(IService):
     def interact(self, tweet: TweetObject):
         self.process.args_queue.put(tweet)
 
+
 if __name__ == "__main__":
-    #Code for quick tesing 
+    # Code for quick tesing
     service: TwitterService = TwitterService()
     service.start_service()
     while True:
         pass
-
