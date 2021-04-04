@@ -51,7 +51,7 @@ class RSSService(IService):
             """
             LAST_PUBLISHED = datetime.now()
             last_rss_entry = self.__load_entries()[0]
-            if datetime.fromtimestamp(mktime(last_rss_entry["published_parsed"])) > LAST_PUBLISHED:
+            if datetime.fromtimestamp(mktime(last_rss_entry["published_parsed"])) < LAST_PUBLISHED:
                 sleep(10)
                 return None
             LAST_PUBLISHED = datetime.now()
