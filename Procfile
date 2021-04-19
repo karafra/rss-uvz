@@ -1,1 +1,1 @@
-web: python manage.py run-bot
+web: gunicorn myproject.wsgi
