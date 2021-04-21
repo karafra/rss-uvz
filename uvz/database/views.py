@@ -15,7 +15,7 @@ from django.db.models import Q
 @require_POST
 @validate_request_body()
 @validate_token_in_body
-def read_records_from_database(request: HttpRequest):
+def read_emails_from_database(request: HttpRequest):
     out = []
     if "pageSize" in (json_response := json.loads(request.body.decode("utf-8"))):
         all_records = RecordRSS.objects.all()
@@ -94,3 +94,21 @@ def delete_email(request: HttpRequest):
     return JsonResponse({
         "email": body.get("email")
     })
+
+
+
+@require_POST
+@validate_request_body()
+@validate_token_in_body
+def read_emails_from_database(request: HttpRequest):
+    out = []
+    if "pageSize" in (json_response := json.loads(request.body.decode("utf-8"))):
+        all_emails = EmailAddresses.objects.all()
+        for i in range(min(len(all_emails), int(json_response["pageSize"]))):
+            out.append(model_to_dict(all_emails[i]))
+        return JsonResponse(out, safe=False)
+    for index, record in enumerate(EmailAddresses.objects.all()):
+        out.append(model_to_dict(record))
+        if index == 10:
+            return JsonResponse(out, safe=False)
+    return JsonResponse(out, safe=False)
