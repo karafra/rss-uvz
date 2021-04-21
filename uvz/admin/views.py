@@ -22,7 +22,7 @@ def index(request: HttpRequest):
         if user and user.is_active:
             django_login(request, user)
             if next_ == "":
-                return HttpResponseRedirect('/issueapp/')
+                return HttpResponseRedirect("/")
             return HttpResponseRedirect(next_)
     return render(
         request,
