@@ -15,7 +15,7 @@ from django.db.models import Q
 @require_POST
 @validate_request_body()
 @validate_token_in_body
-def read_emails_from_database(request: HttpRequest):
+def read_rss_from_database(request: HttpRequest):
     out = []
     if "pageSize" in (json_response := json.loads(request.body.decode("utf-8"))):
         all_records = RecordRSS.objects.all()
