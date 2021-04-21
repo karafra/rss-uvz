@@ -81,7 +81,7 @@ def is_new_record(token):
 
 def bot_run():
     print(f"<{'-'*80}>")
-    token = get_auth_token().get("token", "token")
+    token = get_auth_token().get("token")
     if (record := is_new_record(token)):
         put_to_db(payload=record, token=token)
         make_tweet(payload=record, token=token)

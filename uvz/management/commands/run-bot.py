@@ -9,18 +9,18 @@ class Command(BaseCommand):
     help = 'Runs the cronjobs'
 
     def add_arguments(self, parser: CommandParser) -> None:
+        parser.add_argument("-p", "--port", type=int, help="Port to run server on")
         parser.add_argument("-r", "--repeat", type=int, help="Time after which cron job repeats")
-
     def handle(self, *args, **options):
         self._log_info("Configuring jobs")
         scheduler = BackgroundScheduler()
-        scheduler.add_job(bot_run, "interval", seconds=int(options.get("repeat", 1)), jitter=10)
-        
+        scheduler.add_job(bot_run, "interval", seconds=int(options.get("repeat") or "10"), jitter=10)
+        port = options.get("port") or "8000"
         try:
             self._log_info("Running scheduler")
             scheduler.start()
             self._log_info("Starting server")
-            call_command("runserver")
+            call_command("runserver", port)
         except KeyboardInterrupt:
             self._log_info("Stoping background job")
             scheduler.remove_all_jobs()

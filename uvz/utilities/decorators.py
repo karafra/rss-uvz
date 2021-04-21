@@ -1,4 +1,5 @@
 import json
+from logging import error
 from requests import Response
 from typing import Any, Dict, Union
 from django.http.request import HttpRequest
@@ -20,7 +21,11 @@ def validate_post_request_body(sample_body: Union[Dict[str, str], Dict[str, Dict
 def raiseAndJSON(func):
     def _raiseAndJSON(*args, **kwargs) -> Any:
         response: Response = func(*args, **kwargs)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(response.json())
+            raise Exception(str(e)) from e
         return response.json()
     return _raiseAndJSON
 

@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-dcrxggckdn%w()3*afs=dr7b)hl8x0t%-fxzhdta3w^y-h1bf^
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "uvz.herokuapp.com"
+    "uvz.herokuapp.com", 
+    "127.0.0.1"
 ]
 
 # Set CRFR cokie secure, so can be posted from postman
