@@ -22,7 +22,7 @@ def index(request: HttpRequest):
         if user and user.is_active:
             django_login(request, user)
             if not next_:
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/super_secret/")
             return HttpResponseRedirect(next_)
     return render(
         request,

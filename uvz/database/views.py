@@ -59,18 +59,20 @@ def insert_record(request: HttpRequest):
 @require_http_methods(["PUT"])
 @validate_request_body(sample_body={
     "token": "Authentication token",
-    "email": "Email address to add"
+    "email": "Email address to add",
+    "nameOfUser": "Name of user to add"
 })
 @validate_token_in_body
 def insert_email(request: HttpRequest):
     body = json.loads(request.body)
     address = EmailAddresses.objects.filter(Q(email=body.get("email")))
-    if not address:
+    if address:
         return JsonResponse({
             "error": "Email address is already in database"
         })
     EmailAddresses(
-        email=body.get("email")
+        email=body.get("email"),
+        name=body.get("nameOfUser")
     ).save()
     return JsonResponse({
         "email": body.get("email")

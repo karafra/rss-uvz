@@ -1,5 +1,30 @@
-{% load static %}
-<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-<h1>
-    Hello, World!
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'styles/console.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <script src="{% static 'scripts/console.js' %}"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="bg">
+        <div class="card">
+            <div class="title">Add New User</div>
+            <form class='form'>
+                <div class="h2">User Information</div>
+                <input type="text" name="name" placeholder='Name' class="float-label" required id="nameField">
+                <input type="text" name="email address" placeholder='Email Address' class="float-label" required id="emailField">
+            </form>
+            <div class="button" id="submitButton" onclick="addUser()">Send Invite</div>
+        </div>
+    </div>
+</body>
+
+</html>
