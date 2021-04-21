@@ -1,0 +1,24 @@
+{
+    "python.pythonPath": "C:\\Users\\mtoth\\OneDrive\\Počítač\\django-port\\uvz\\env\\Scripts\\python.exe",
+    "git.ignoreLimitWarning": true,
+    "search.exclude": {
+        "env": true,
+        ".sqlite3": true,
+        ".vscode": true,
+        "launch.json": true,
+        "settings.json": true,
+        "*/__pycache__/": true,
+        "__pycache__/*": true,
+        ".pyc": true
+    },
+    "files.exclude": {
+        "env": true,
+        ".sqlite3": true,
+        ".vscode": true,
+        "launch.json": true,
+        "settings.json": true,
+        "*/__pycache__/": true,
+        "__pycache__/*": true,
+        ".pyc": true
+    }
+}
