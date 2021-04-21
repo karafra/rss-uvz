@@ -1,1 +1,1 @@
-web: waitress-serve --listen=*:8000  uvz.wsgi:application
+web: waitress-serve --listen=*:$PORT  uvz.wsgi:application
