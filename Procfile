@@ -1,1 +1,1 @@
-web: waitress-serve --listen=*:$PORT  uvz.wsgi:application
+web: python manage.py run-bot -r 10
