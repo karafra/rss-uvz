@@ -25,7 +25,6 @@ const addUser = () => {
             "content-type": "application/json; charset=UTF-8 "
         },
         body: JSON.stringify({
-            token: token,
             email: email,
             nameOfUser: name
         }),

@@ -1,3 +1,4 @@
+from uvz.auth.functions import generate_auth_token
 from uvz.utilities.decorators import validate_token_in_body, validate_request_body
 import jwt
 import json
@@ -10,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from os import environ
 
+
 @require_POST
 @validate_request_body({
     "username": "Username of user to authorize",
@@ -17,21 +19,14 @@ from os import environ
 })
 def get_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
-    if user := authenticate(
-        username=request_dict["username"],
-        password=request_dict["password"]):
+    if token := generate_auth_token(request_dict["username"], request_dict["password"]):
         return JsonResponse({
-            "token": jwt.encode({
-                "iss": "uvz-rss.auth",
-                "sub": user.get_username(),
-                "iat": (time_ := time()),
-                "exp": (time_ + 300),
-                "loggedInAs": user.get_username(),
-            }, key=environ["PRIVATE_KEY_JWT"], algorithm="HS256")
+            "token": token
         })
     return JsonResponse({
         "Error": "Username nad password do not match, or user with theese credentials does not exist"
     })
+
 
 @require_POST
 @validate_request_body({
@@ -40,9 +35,10 @@ def get_token(request: HttpRequest):
 def validate_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
     try:
-        token = jwt.decode(request_dict["token"], key=environ["PRIVATE_KEY_JWT"], algorithms="HS256")
+        token = jwt.decode(
+            request_dict["token"], key=environ["PRIVATE_KEY_JWT"], algorithms="HS256")
         return JsonResponse({
-            "isValid": True, 
+            "isValid": True,
             "tokenDecoded": token
         })
     except jwt.ExpiredSignatureError:

@@ -1,5 +1,6 @@
 import ssl
 import smtplib
+import sys
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -36,5 +37,8 @@ class EmailClient(object):
             msg.attach(MIMEText(text, "plain"))
         for reciever in recievers:
             msg["To"] = reciever
-            self.__server.sendmail("mtoth575@gmail.com",
-                                   reciever, msg.as_string())
+            try:
+                self.__server.sendmail("mtoth575@gmail.com",
+                                    reciever, msg.as_string())
+            except Exception as err:
+                print(str(err), file=sys.stderr)

@@ -1,8 +1,6 @@
 import json
-from sys import set_asyncgen_hooks
 from uvz.models.emailAddresses import EmailAddresses
 from uvz.utilities.decorators import validate_token_in_body
-import feedparser
 from django.http.request import HttpRequest
 from uvz.models.recordModel import RecordRSS
 from django.forms.models import model_to_dict
@@ -32,7 +30,7 @@ def read_rss_from_database(request: HttpRequest):
 
 @require_http_methods(["PUT"])
 @validate_request_body(sample_body={
-    "token": "Authentication token",
+    "token": "Authentication token (optional)",
     "record": {
         "published": "Time the record was published",
         "link": "link to full article",
@@ -81,7 +79,7 @@ def insert_email(request: HttpRequest):
 
 @require_http_methods(["DELETE"])
 @validate_request_body(sample_body={
-    "token": "Authentication token",
+    "token": "Authentication token (optional)",
     "email": "Email address to delete"
 })
 @validate_token_in_body

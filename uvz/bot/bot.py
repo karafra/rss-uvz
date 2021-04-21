@@ -3,7 +3,8 @@ from uvz.utilities.decorators import raiseAndJSON
 import requests
 import os
 from dotenv import load_dotenv
-
+from uvz.models.emailAddresses import EmailAddresses
+from uvz.email.EmailClient import EmailClient
 load_dotenv()
 BASE_URl = os.environ.get("BASE_URL")
 
@@ -23,7 +24,7 @@ def get_last_record(token: str) -> Union[Any, RecordRespose]:
 
 @raiseAndJSON
 def put_to_db(payload=None, token=None) -> Union[Any, RecordRespose]:
-    return requests.put(f"{BASE_URl}/api/database/insertRecord", json={
+    return requests.put(f"{BASE_URl}/api/database/insertRecord/", json={
         "token": token, 
         "record": payload
         })
@@ -53,7 +54,7 @@ def send_mails(payload: Dict[str, Any] = {
 
 @raiseAndJSON
 def get_record_from_db(token, ammount: int = 10) -> Union[List[Union[Any, RecordRespose]], Any]:
-    return requests.post(f"{BASE_URl}/api/database/readRecords", json={
+    return requests.post(f"{BASE_URl}/api/database/readRecords/", json={
         "token": token,
         "pageSize": ammount
     })
@@ -85,4 +86,6 @@ def bot_run():
     if (record := is_new_record(token)):
         put_to_db(payload=record, token=token)
         make_tweet(payload=record, token=token)
+        with EmailClient() as client:
+            client.send_mail(record["description"], *list(map(lambda record: record.email, EmailAddresses.objects.all())), is_html=True)
         print(f"{'#'*20}New Record{'#'*20}")

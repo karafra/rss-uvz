@@ -1,3 +1,4 @@
+from uvz.auth.functions import generate_auth_token
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 import requests
 from django.shortcuts import redirect, render
@@ -10,7 +11,6 @@ from django.template.context import RequestContext
 
 @require_http_methods(["GET", "POST"])
 def index(request: HttpRequest):
-
     next_, username, password = "", "", ""
     
     if request.GET:
@@ -22,6 +22,8 @@ def index(request: HttpRequest):
         if user and user.is_active:
             django_login(request, user)
             if not next_:
+                response = HttpResponseRedirect("/super_secret/")
+                response.set_cookie("token", generate_auth_token(username, password), httponly=True)
                 return HttpResponseRedirect("/super_secret/")
             return HttpResponseRedirect(next_)
     return render(
