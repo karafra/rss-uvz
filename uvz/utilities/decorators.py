@@ -9,6 +9,9 @@ import requests
 def validate_request_body(sample_body: Union[Dict[str, str], Dict[str, Dict[str, str]]]  = {"token": "Authentification token", }, status_if_failed: int = 400):
     def _validate_post_request_body(func):
         def __validate_post_request_body(request: HttpRequest, *args, **kwargs):
+            for key, value in sample_body.copy().items():
+                if "(optional)" in value:
+                    del sample_body[key]
             if set(sample_body).issubset(set(json.loads(request.body.decode("utf-8")))):
                 return func(request, *args, **kwargs)
             err_dict: Dict[str, str] = {
@@ -32,8 +35,13 @@ def raiseAndJSON(func):
 
 def validate_token_in_body(func):
     def _validateTokenInBody(*args, **kwargs):
+        request: HttpRequest = args[0]
         request_dict = json.loads(args[0].body.decode("utf-8"))
-        token = request_dict["token"]
+        token = request_dict.get("token")
+        if not token or not (token := request.COOKIES.get("token")):
+            return JsonResponse({
+                "Error": f"Auth token is missing"
+            })
         response = requests.post(f"http://{args[0].META['HTTP_HOST']}/api/auth/validateToken", json={
             "token": token
         })

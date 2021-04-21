@@ -35,7 +35,7 @@ def get_token(request: HttpRequest):
 
 @require_POST
 @validate_request_body({
-    "token": "Token to validate"
+    "token": "Token to validate (optional)"
 })
 def validate_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
