@@ -1,20 +1,20 @@
 
 import json
-from uvz.utilities.decorators import validateTokenInBody
+from uvz.utilities.decorators import validate_token_in_body
 from uvz.email.EmailClient import EmailClient
 from django.views.decorators.http import require_POST
-from uvz.utilities.decorators import validate_post_request_body
+from uvz.utilities.decorators import validate_request_body
 from django.http.request import HttpRequest
 from django.http.response import JsonResponse
 
 
 @require_POST
-@validate_post_request_body({
+@validate_request_body({
     "token": "Authetication token",
     "emailMessage": "Message to be sent ...",
     "recievers": ["List of recievers of this message"]
 })
-@validateTokenInBody
+@validate_token_in_body
 def test(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
 

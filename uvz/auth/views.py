@@ -1,4 +1,4 @@
-from uvz.utilities.decorators import validateTokenInBody, validate_post_request_body
+from uvz.utilities.decorators import validate_token_in_body, validate_request_body
 import jwt
 import json
 from time import time
@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate
 from os import environ
 
 @require_POST
-@validate_post_request_body({
+@validate_request_body({
     "username": "Username of user to authorize",
     "password": "Password of user to authroize"
 })
@@ -34,7 +34,7 @@ def get_token(request: HttpRequest):
     })
 
 @require_POST
-@validate_post_request_body({
+@validate_request_body({
     "token": "Token to validate"
 })
 def validate_token(request: HttpRequest):

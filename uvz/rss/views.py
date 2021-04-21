@@ -1,6 +1,6 @@
 import json
 from typing import Dict, List
-from uvz.utilities.decorators import validateTokenInBody, validate_post_request_body
+from uvz.utilities.decorators import validate_token_in_body, validate_request_body
 from django.http.response import HttpResponse, JsonResponse
 import feedparser
 from django.http.request import HttpRequest
@@ -53,9 +53,9 @@ class FeedParser(object):
             return self.entries[-1].toJSON()
         return self.entries[i].toJSON()
 
-@validate_post_request_body()
+@validate_request_body()
 @require_http_methods(["POST", "GET"])
-@validateTokenInBody
+@validate_token_in_body
 def get_lastest_rss_from_feed(request: HttpRequest):
     feed = feedparser.parse(
         "https://www.uvzsr.sk/index.php?option=com_content&view=frontpage&Itemid=1&type=rss&format=feed")

@@ -6,7 +6,7 @@ from django.http.request import HttpRequest
 from django.http.response import JsonResponse
 import requests
 
-def validate_post_request_body(sample_body: Union[Dict[str, str], Dict[str, Dict[str, str]]]  = {"token": "Authentification token", }, status_if_failed: int = 400):
+def validate_request_body(sample_body: Union[Dict[str, str], Dict[str, Dict[str, str]]]  = {"token": "Authentification token", }, status_if_failed: int = 400):
     def _validate_post_request_body(func):
         def __validate_post_request_body(request: HttpRequest, *args, **kwargs):
             if set(sample_body).issubset(set(json.loads(request.body.decode("utf-8")))):
@@ -30,7 +30,7 @@ def raiseAndJSON(func):
     return _raiseAndJSON
 
 
-def validateTokenInBody(func):
+def validate_token_in_body(func):
     def _validateTokenInBody(*args, **kwargs):
         request_dict = json.loads(args[0].body.decode("utf-8"))
         token = request_dict["token"]

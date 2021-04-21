@@ -55,7 +55,8 @@
         "# Django stuff:": true,
         "*.log": true,
         "local_settings.py": true,
-        "db.sqlite3": true,
+        "# Show database": true,
+        "!db.sqlite3": true,
         "db.sqlite3-journal": true,
         "# Flask stuff:": true,
         "instance/": true,
@@ -113,7 +114,9 @@
         "# pytype static type analyzer": true,
         ".pytype/": true,
         "# Cython debug symbols": true,
-        "cython_debug/": true
+        "cython_debug/": true,
+        "# VScode stuff": true,
+        ".vscode": true
     },
     "files.exclude": {
         "# Byte-compiled / optimized / DLL files": true,
@@ -169,7 +172,8 @@
         "# Django stuff:": true,
         "*.log": true,
         "local_settings.py": true,
-        "db.sqlite3": true,
+        "# Show database": true,
+        "!db.sqlite3": true,
         "db.sqlite3-journal": true,
         "# Flask stuff:": true,
         "instance/": true,
@@ -227,6 +231,8 @@
         "# pytype static type analyzer": true,
         ".pytype/": true,
         "# Cython debug symbols": true,
-        "cython_debug/": true
+        "cython_debug/": true,
+        "# VScode stuff": true,
+        ".vscode": true
     }
 }

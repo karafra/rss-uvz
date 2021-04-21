@@ -1,17 +1,20 @@
 import json
-from uvz.utilities.decorators import validateTokenInBody
+from sys import set_asyncgen_hooks
+from uvz.models.emailAddresses import EmailAddresses
+from uvz.utilities.decorators import validate_token_in_body
 import feedparser
 from django.http.request import HttpRequest
 from uvz.models.recordModel import RecordRSS
 from django.forms.models import model_to_dict
 from django.http.response import HttpResponse, JsonResponse
-from uvz.utilities.decorators import validate_post_request_body
+from uvz.utilities.decorators import validate_request_body
 from django.views.decorators.http import require_POST, require_http_methods
+from django.db.models import Q
 
 
 @require_POST
-@validate_post_request_body()
-@validateTokenInBody
+@validate_request_body()
+@validate_token_in_body
 def read_records_from_database(request: HttpRequest):
     out = []
     if "pageSize" in (json_response := json.loads(request.body.decode("utf-8"))):
@@ -28,7 +31,7 @@ def read_records_from_database(request: HttpRequest):
 
 
 @require_http_methods(["PUT"])
-@validate_post_request_body(sample_body={
+@validate_request_body(sample_body={
     "token": "Authentication token",
     "record": {
         "published": "Time the record was published",
@@ -37,7 +40,7 @@ def read_records_from_database(request: HttpRequest):
         "title": "Title of article",
     }
 })
-@validateTokenInBody
+@validate_token_in_body
 def insert_record(request: HttpRequest):
     json_record = json.loads(request.body.decode("utf-8"))["record"]
     if len(list(RecordRSS.objects.all())) > 9:
@@ -51,3 +54,43 @@ def insert_record(request: HttpRequest):
             title=json_record["title"]
         ).save()
     return JsonResponse(json_record)
+
+
+@require_http_methods(["PUT"])
+@validate_request_body(sample_body={
+    "token": "Authentication token",
+    "email": "Email address to add"
+})
+@validate_token_in_body
+def insert_email(request: HttpRequest):
+    body = json.loads(request.body)
+    address = EmailAddresses.objects.filter(Q(email=body.get("email")))
+    if not address:
+        return JsonResponse({
+            "error": "Email address is already in database"
+        })
+    EmailAddresses(
+        email=body.get("email")
+    ).save()
+    return JsonResponse({
+        "email": body.get("email")
+    })
+
+
+@require_http_methods(["DELETE"])
+@validate_request_body(sample_body={
+    "token": "Authentication token",
+    "email": "Email address to delete"
+})
+@validate_token_in_body
+def delete_email(request: HttpRequest):
+    body = json.loads(request.body)
+    address = EmailAddresses.objects.filter(Q(email=body.get("email")))
+    if not address:
+        return JsonResponse({
+            "error": "Email address is not in database"
+        })
+    address.delete()
+    return JsonResponse({
+        "email": body.get("email")
+    })
