@@ -12,7 +12,7 @@ from django.template.context import RequestContext
 def index(request: HttpRequest):
 
     next_, username, password = "", "", ""
-
+    
     if request.GET:
         next_ = request.GET.get('next', "")
     if request.POST:
@@ -21,7 +21,7 @@ def index(request: HttpRequest):
         user = authenticate(username=username, password=password)
         if user and user.is_active:
             django_login(request, user)
-            if next_ == "":
+            if not next_:
                 return HttpResponseRedirect("/")
             return HttpResponseRedirect(next_)
     return render(
