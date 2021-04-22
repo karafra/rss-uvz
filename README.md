@@ -10,5 +10,3 @@ Simple bit repost RSS feed to Twitter and also sends theese updates as emails to
 - Add Welcome mail
 - Add sorry you left email
 - ### Add TESTS
-
-
