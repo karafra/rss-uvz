@@ -1,13 +1,17 @@
 import ssl
 import smtplib
+import sys
+from os import environ
 from datetime import datetime
+from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+load_dotenv()
 
 class EmailClient(object):
     __PORT = 465
-    __APP_PASSWORD = "yypqclzwnqclgifq"
+    __APP_PASSWORD = environ["EMAIL_APP_PASSWORD"]
     __CONTEXT = ssl.create_default_context()
 
     def __enter__(self):
@@ -36,5 +40,8 @@ class EmailClient(object):
             msg.attach(MIMEText(text, "plain"))
         for reciever in recievers:
             msg["To"] = reciever
-            self.__server.sendmail("mtoth575@gmail.com",
-                                   reciever, msg.as_string())
+            try:
+                self.__server.sendmail("mtoth575@gmail.com",
+                                    reciever, msg.as_string())
+            except Exception as err:
+                print(str(err), file=sys.stderr)

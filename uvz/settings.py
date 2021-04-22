@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-dcrxggckdn%w()3*afs=dr7b)hl8x0t%-fxzhdta3w^y-h1bf^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "uvz.herokuapp.com", 
+    "127.0.0.1"
+]
 
 # Set CRFR cokie secure, so can be posted from postman
 CSRF_COOKIE_SECURE = True
@@ -152,6 +155,8 @@ GMAIL_API_CONFIG = {
   }
 }
 # Enable httpOnly cookies
+SESSION_COOKIE_PATH = '/;HttpOnly'
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 # Url to redirect to 
 LOGIN_URL = "/"
