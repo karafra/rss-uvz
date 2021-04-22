@@ -13,9 +13,9 @@ from uvz.utilities.decorators import validate_request_body
 })
 def get_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
-    if token := generate_auth_token(request_dict["username"], request_dict["password"]):
+    if token := generate_auth_token(request_dict["username"], request_dict["password"], expiration=600):
         refresh_token = generate_auth_token(
-            request_dict["username"], request_dict["password"], expiration=3600)
+            request_dict["username"], request_dict["password"], expiration=3600*2)
         return JsonResponse({
             "token": token,
             "refreshToken": refresh_token
@@ -45,8 +45,8 @@ def refresh_token(request: HttpRequest):
         return JsonResponse(response)
     username = response.get("tokenDecoded").get("sub")
     response = JsonResponse({
-            "token": (token := generate_auth_token(None, None, username_=username)),
-            "refreshToken": (refresh_token := generate_auth_token(None, None, username_=username, expiration=3600))
+            "token": (token := generate_auth_token(None, None, username_=username, expiration=600)),
+            "refreshToken": (refresh_token := generate_auth_token(None, None, username_=username, expiration=3600*2))
         })
     response.set_cookie("token", token, httponly=True)
     response.set_cookie("refreshToken", refresh_token, httponly=True)

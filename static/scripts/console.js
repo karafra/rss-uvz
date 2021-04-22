@@ -9,7 +9,7 @@ const refreshToken = async() => {
     const responseJson = await responseRaw.json();
     if (responseJson.isValid === false) {
         console.error(`Error validating token: ${responseJson.error}`)
-        return;
+        return responseJson;
     }
     console.debug("Tokens refresed ...")
 }
@@ -41,7 +41,7 @@ const removeEmail = async(element) => {
     if (responseJson.Error && responseJson.Error.includes("Token")) {
         console.log(responseJson)
         console.debug("Error validating token, trying to refresh this token ...");
-        refreshToken();
+        await refreshToken();
         return removeEmail(element);
     }
     removeEmailFromDOM(element);
@@ -67,10 +67,23 @@ const addUser = async() => {
         method: "PUT"
     });
     const responseJson = await responseRaw.json();
-    if (!responseJson.email) {
-        console.debug("Error validating token, trying to refresh this token ...");
-        refreshToken();
-        return addUser();
+    if (responseJson.Error) {
+        console.debug(responseJson.Error);
+        const refreshTokenResponse = await refreshToken();
+        if (refreshTokenResponse) {
+            console.error("Refresh token expired");
+            return;
+        }
+        return await addUser();
     }
+    document.getElementById("email-list").insertAdjacentHTML("beforeend",
+        `
+        <li class="email-address">
+            <p>${name} (${email})</p>
+            <a onclick="removeEmail(this)">
+                <i class="far fa-trash-alt"></i>
+            </a>
+        </li>
+    `);
     console.debug("Email added");
 }

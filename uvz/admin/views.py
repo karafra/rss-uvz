@@ -3,6 +3,7 @@ from django.http import response
 from uvz.auth.functions import generate_auth_token
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 import requests
+from uvz.models.emailAddresses import EmailAddresses
 from django.shortcuts import redirect, render
 from django.http.request import HttpRequest
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
@@ -21,9 +22,9 @@ def index(request: HttpRequest):
         username = request.POST.get("username", "")
         password = request.POST.get('password', "")
         user = authenticate(username=username, password=password)
-        if user and user.is_active:
+        if user:
             django_login(request, user)
-            response = HttpResponseRedirect(next_ or "/console/")
+            response = HttpResponseRedirect(next_ or "/console/", {"emails": EmailAddresses.objects.all()})
             response.set_cookie("token", generate_auth_token(username, password, expiration=2), httponly=True)
             response.set_cookie("refreshToken", generate_auth_token(username, password, expiration=3600), httponly=True)
             return response
@@ -39,7 +40,7 @@ def index(request: HttpRequest):
 @require_GET
 @login_required()
 def console(request: HttpRequest):
-    return render(request, "console.html")
+    return render(request, "console.html", {"emails": EmailAddresses.objects.all()})
 
 @require_POST
 def refreshToken(request: HttpRequest):

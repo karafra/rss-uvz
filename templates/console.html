@@ -27,12 +27,14 @@
         </div>
     </div>
     <div style="text-align: center;">
-        <ul class="list" style="display: inline-block">
+        <ul class="list" style="display: inline-block" id="email-list">
+            {% for entry in emails %}
             <li class="email-address">
-                <p>Matus Toth (admin@admin.com)</p>
+                <p>{{ entry.name }} ({{ entry.email }})</p>
                 <a onclick="removeEmail(this)">
                 <i class="far fa-trash-alt"></i>
                 </a>
+            {% endfor %}
             </li>
         </ul>
     </div>
