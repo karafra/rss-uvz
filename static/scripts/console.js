@@ -9,7 +9,43 @@ const refreshToken = async() => {
     const responseJson = await responseRaw.json();
     if (responseJson.isValid === false) {
         console.error(`Error validating token: ${responseJson.error}`)
+        return;
     }
+    console.debug("Tokens refresed ...")
+}
+
+
+const removeEmailFromDOM = (el) => {
+    var element = el;
+    el.previousElementSibling.parentNode.remove();
+    element.remove();
+}
+
+const getMailFromElement = (element) => {
+    const emailText = element.previousElementSibling.innerHTML;
+    return emailText.match(/\((.*?)\)/)[1]
+}
+
+const removeEmail = async(element) => {
+    const email = getMailFromElement(element);
+    const responseRaw = await fetch(`${window.location.origin}/api/database/deleteEmail/`, {
+        headers: {
+            "content-type": "application/json; charset=UTF-8 "
+        },
+        body: JSON.stringify({
+            email: email
+        }),
+        method: "DELETE"
+    });
+    const responseJson = await responseRaw.json();
+    if (responseJson.Error && responseJson.Error.includes("Token")) {
+        console.log(responseJson)
+        console.debug("Error validating token, trying to refresh this token ...");
+        refreshToken();
+        return removeEmail(element);
+    }
+    removeEmailFromDOM(element);
+    console.debug("Email removed");
 }
 
 
