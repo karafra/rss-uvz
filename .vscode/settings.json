@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\mtoth\\OneDrive\\Počítač\\django-port\\uvz\\env\\Scripts\\python.exe",
+    "python.pythonPath": "C:\\Users\\mtoth\\OneDrive\\Počítač\\rss-uvz\\env\\Scripts\\python.exe",
     "git.ignoreLimitWarning": true,
     "search.exclude": {
         "# Byte-compiled / optimized / DLL files": true,
