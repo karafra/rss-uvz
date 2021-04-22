@@ -28,12 +28,11 @@ def validate_request_body(sample_body: Union[Dict[str, str], Dict[str, Dict[str,
 
 
 def raiseAndJSON(func):
-    def _raiseAndJSON(*args, **kwargs) -> Any:
+    def _raiseAndJSON(*args, **kwargs) -> Dict[str, Any]:
         response: Response = func(*args, **kwargs)
         try:
             response.raise_for_status()
         except Exception as e:
-            print(response.json())
             raise Exception(str(e)) from e
         return response.json()
     return _raiseAndJSON
@@ -43,17 +42,16 @@ def validate_token_in_body(func):
     def _validateTokenInBody(*args, **kwargs):
         request: HttpRequest = args[0]
         request_dict = json.loads(request.body.decode("utf-8"))
-        token = request_dict.get("token")
-        if not (token or (token := request.COOKIES.get("token"))):
+        if not ((token := request_dict.get("token")) or (token := request.COOKIES.get("token"))):
             return JsonResponse({
                 "Error": "Auth token is missing"
             })
-        response = requests.post(f"http://{request.META['HTTP_HOST']}/api/auth/validateToken", json={
+        response = requests.post(f"http://{request.META['HTTP_HOST']}/api/auth/validateToken/", json={
             "token": token
         })
         try:
             response.raise_for_status()
-            if "Error" in (response_json := response.json()) or "error" in (response_json := response.json()):
+            if "Error" in (response_json := response.json()) or "error" in response_json:
                 raise Exception(
                     f"Error: {response_json.get('error') or response_json.get('Error')}")
         except Exception as err:

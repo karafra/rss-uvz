@@ -1,15 +1,9 @@
-from uvz.auth.functions import generate_auth_token
-from uvz.utilities.decorators import validate_token_in_body, validate_request_body
-import jwt
 import json
-from time import time
-from django.contrib import auth
 from django.http.request import HttpRequest
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import JsonResponse
+from uvz.auth.functions import generate_auth_token, validate_auth_token
 from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from os import environ
+from uvz.utilities.decorators import validate_request_body
 
 
 @require_POST
@@ -20,8 +14,11 @@ from os import environ
 def get_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
     if token := generate_auth_token(request_dict["username"], request_dict["password"]):
+        refresh_token = generate_auth_token(
+            request_dict["username"], request_dict["password"], expiration=3600)
         return JsonResponse({
-            "token": token
+            "token": token,
+            "refreshToken": refresh_token
         })
     return JsonResponse({
         "Error": "Username nad password do not match, or user with theese credentials does not exist"
@@ -34,25 +31,23 @@ def get_token(request: HttpRequest):
 })
 def validate_token(request: HttpRequest):
     request_dict = json.loads(request.body.decode("utf-8"))
-    try:
-        token = jwt.decode(
-            request_dict["token"], key=environ["PRIVATE_KEY_JWT"], algorithms="HS256")
-        return JsonResponse({
-            "isValid": True,
-            "tokenDecoded": token
+    return JsonResponse(validate_auth_token(request_dict.get("token")))
+
+
+@require_POST
+@validate_request_body(sample_body={
+    "refreshToken": "Token used to authorize refresh of token (optional)"
+})
+def refresh_token(request: HttpRequest):
+    token = json.loads(request.body.decode("utf-8")).get("refreshToken") or request.COOKIES.get("refreshToken")
+    response = validate_auth_token(token)
+    if not response.get("isValid"):
+        return JsonResponse(response)
+    username = response.get("tokenDecoded").get("sub")
+    response = JsonResponse({
+            "token": (token := generate_auth_token(None, None, username_=username)),
+            "refreshToken": (refresh_token := generate_auth_token(None, None, username_=username, expiration=3600))
         })
-    except jwt.ExpiredSignatureError:
-        return JsonResponse({
-            "isValid": False,
-            "Error": "Token expired"
-        })
-    except jwt.InvalidTokenError:
-        return JsonResponse({
-            "isValid": False,
-            "Error": "Token is not not in correct format"
-        })
-    except Exception as err:
-        return JsonResponse({
-            "isValid": False,
-            "Error": str(err)
-        })
+    response.set_cookie("token", token, httponly=True)
+    response.set_cookie("refreshToken", refresh_token, httponly=True)
+    return response 

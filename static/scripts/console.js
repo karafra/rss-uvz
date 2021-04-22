@@ -1,26 +1,26 @@
-let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1dnotcnNzLmF1dGgiLCJzdWIiOiJtdG90aDU3NUBnbWFpbC5jb20iLCJpYXQiOjE2MTkwMzcyNjEuNjgzOTgzMywiZXhwIjoxNjE5MDM3NTYxLjY4Mzk4MzMsImxvZ2dlZEluQXMiOiJtdG90aDU3NUBnbWFpbC5jb20ifQ.GZqWHe2tVDC6AVeSHPR2Z4SL5dklSyehsbnbShZRR4I";
-
-const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop().split(';').shift();
+const refreshToken = async() => {
+    const responseRaw = await fetch(`${window.location.origin}/api/auth/refreshToken/`, {
+        headers: {
+            "content-type": "application/json; charset=UTF-8 "
+        },
+        body: JSON.stringify({}),
+        method: "POST"
+    });
+    const responseJson = await responseRaw.json();
+    if (responseJson.isValid === false) {
+        console.error(`Error validating token: ${responseJson.error}`)
     }
 }
 
 
-const fixUpToken = () => {
-    get
-}
-
-
-const addUser = () => {
+const addUser = async() => {
     const name = document.getElementById("nameField").value;
     const email = document.getElementById("emailField").value;
     if (!name || !email) {
-        console.error("Missing required field (username or name)")
+        console.error("Missing required field (username or name)");
     }
-    fetch(`${window.location.origin}/api/database/insertEmail/`, {
+    // Make request to FE, to add user
+    const responseRaw = await fetch(`${window.location.origin}/api/database/insertEmail/`, {
         headers: {
             "content-type": "application/json; charset=UTF-8 "
         },
@@ -29,9 +29,12 @@ const addUser = () => {
             nameOfUser: name
         }),
         method: "PUT"
-    }).then(res =>
-        res.json().then(
-            res => console.log(res)
-        )
-    );
+    });
+    const responseJson = await responseRaw.json();
+    if (!responseJson.email) {
+        console.debug("Error validating token, trying to refresh this token ...");
+        refreshToken();
+        return addUser();
+    }
+    console.debug("Email added");
 }

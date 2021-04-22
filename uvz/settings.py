@@ -155,6 +155,8 @@ GMAIL_API_CONFIG = {
   }
 }
 # Enable httpOnly cookies
+SESSION_COOKIE_PATH = '/;HttpOnly'
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 # Url to redirect to 
 LOGIN_URL = "/"

@@ -56,7 +56,7 @@ def insert_record(request: HttpRequest):
 
 @require_http_methods(["PUT"])
 @validate_request_body(sample_body={
-    "token": "Authentication token",
+    "token": "Authentication token (optional)",
     "email": "Email address to add",
     "nameOfUser": "Name of user to add"
 })
@@ -88,13 +88,12 @@ def delete_email(request: HttpRequest):
     address = EmailAddresses.objects.filter(Q(email=body.get("email")))
     if not address:
         return JsonResponse({
-            "error": "Email address is not in database"
+            "error": f"Email address ({body.get('email')}) is not in database"
         })
     address.delete()
     return JsonResponse({
         "email": body.get("email")
     })
-
 
 
 @require_POST

@@ -1,9 +1,11 @@
+from uvz.auth.views import get_token
+from django.http import response
 from uvz.auth.functions import generate_auth_token
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 import requests
 from django.shortcuts import redirect, render
 from django.http.request import HttpRequest
-from django.views.decorators.http import require_GET, require_http_methods
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth import authenticate, login as django_login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.context import RequestContext
@@ -21,11 +23,10 @@ def index(request: HttpRequest):
         user = authenticate(username=username, password=password)
         if user and user.is_active:
             django_login(request, user)
-            if not next_:
-                response = HttpResponseRedirect("/super_secret/")
-                response.set_cookie("token", generate_auth_token(username, password), httponly=True)
-                return HttpResponseRedirect("/super_secret/")
-            return HttpResponseRedirect(next_)
+            response = HttpResponseRedirect(next_ or "/console/")
+            response.set_cookie("token", generate_auth_token(username, password, expiration=2), httponly=True)
+            response.set_cookie("refreshToken", generate_auth_token(username, password, expiration=3600), httponly=True)
+            return response
     return render(
         request,
         "index.html", {
@@ -37,9 +38,16 @@ def index(request: HttpRequest):
 
 @require_GET
 @login_required()
-def super_secret_site(request: HttpRequest):
+def console(request: HttpRequest):
     return render(request, "console.html")
 
+@require_POST
+def refreshToken(request: HttpRequest):
+    response = JsonResponse({
+        "token": "token"
+    })
+    response.set_cookie("token", "token")
+    return response
 
 @require_GET
 def log_out(request: HttpRequest):
