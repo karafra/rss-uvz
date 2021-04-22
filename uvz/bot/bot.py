@@ -62,7 +62,7 @@ def get_record_from_db(token, ammount: int = 10) -> Union[List[Union[Any, Record
 
 @raiseAndJSON
 def get_auth_token(username: Optional[str] = os.environ["reciever_emails"], password: Optional[str] = os.environ["password"]):
-    return requests.post(f"{BASE_URl}/api/auth/getToken", json={
+    return requests.post(f"{BASE_URl}/api/auth/getToken/", json={
         "username": username,
         "password": password
     })

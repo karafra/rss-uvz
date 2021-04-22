@@ -160,3 +160,5 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 # Url to redirect to 
 LOGIN_URL = "/"
+# Settings module path
+DJANGO_SETTINGS_MODULE = "uvz"
