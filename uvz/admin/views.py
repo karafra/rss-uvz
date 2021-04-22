@@ -41,23 +41,3 @@ def index(request: HttpRequest):
 @login_required()
 def console(request: HttpRequest):
     return render(request, "console.html", {"emails": EmailAddresses.objects.all()})
-
-@require_POST
-def refreshToken(request: HttpRequest):
-    response = JsonResponse({
-        "token": "token"
-    })
-    response.set_cookie("token", "token")
-    return response
-
-@require_GET
-def log_out(request: HttpRequest):
-    try:
-        logout(request)
-        return JsonResponse({
-            "logedOut": True
-        })
-    except Exception as e:
-        return JsonResponse({
-            "error": str(e)
-        })
