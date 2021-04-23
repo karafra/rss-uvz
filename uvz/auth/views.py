@@ -1,9 +1,9 @@
 import json
 from django.http.request import HttpRequest
 from django.http.response import JsonResponse
-from uvz.auth.functions import generate_auth_token, validate_auth_token
 from django.views.decorators.http import require_POST
 from uvz.utilities.decorators import validate_request_body
+from uvz.auth.functions import generate_auth_token, validate_auth_token
 
 
 @require_POST
