@@ -1,8 +1,8 @@
-from uvz.rss.views import ParsedEntry
 import tweepy
 from os import environ
-from dotenv import load_dotenv
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+from uvz.rss.views import ParsedEntry
 
 
 class TwitterApi(tweepy.API):
