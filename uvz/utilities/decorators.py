@@ -1,10 +1,9 @@
 import json
-from logging import error
+import requests
 from requests import Response
 from typing import Any, Dict, Union
 from django.http.request import HttpRequest
 from django.http.response import JsonResponse
-import requests
 
 
 def delete_optional(sample_body):
