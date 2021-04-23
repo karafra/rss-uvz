@@ -1,12 +1,11 @@
-import json
-from typing import Dict, List
-from uvz.utilities.decorators import validate_token_in_body, validate_request_body
-from django.http.response import HttpResponse, JsonResponse
-import feedparser
-from django.http.request import HttpRequest
-from feedparser.util import FeedParserDict
-from django.views.decorators.http import require_http_methods
 import time
+import feedparser
+from typing import Dict, List
+from feedparser.util import FeedParserDict
+from django.http.request import HttpRequest
+from django.http.response import JsonResponse
+from django.views.decorators.http import require_http_methods
+from uvz.utilities.decorators import validate_token_in_body, validate_request_body
 
 
 class ParsedEntry(object):
