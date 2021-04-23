@@ -1,10 +1,11 @@
-from typing import Any, Dict, List, Optional, TypedDict, Union
-from uvz.utilities.decorators import raiseAndJSON
-import requests
 import os
+import requests
 from dotenv import load_dotenv
-from uvz.models.emailAddresses import EmailAddresses
 from uvz.email.EmailClient import EmailClient
+from uvz.utilities.decorators import raiseAndJSON
+from uvz.models.emailAddresses import EmailAddresses
+from typing import Any, Dict, List, Optional, TypedDict, Union
+
 load_dotenv()
 BASE_URl = os.environ.get("BASE_URL")
 
