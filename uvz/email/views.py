@@ -1,11 +1,11 @@
 
 import json
-from uvz.utilities.decorators import validate_token_in_body
+from django.http.request import HttpRequest
 from uvz.email.EmailClient import EmailClient
+from django.http.response import JsonResponse
 from django.views.decorators.http import require_POST
 from uvz.utilities.decorators import validate_request_body
-from django.http.request import HttpRequest
-from django.http.response import JsonResponse
+from uvz.utilities.decorators import validate_token_in_body
 
 
 @require_POST
