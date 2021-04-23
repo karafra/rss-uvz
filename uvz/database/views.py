@@ -1,13 +1,13 @@
 import json
-from uvz.models.emailAddresses import EmailAddresses
-from uvz.utilities.decorators import validate_token_in_body
+from django.db.models import Q
 from django.http.request import HttpRequest
 from uvz.models.recordModel import RecordRSS
 from django.forms.models import model_to_dict
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import JsonResponse
+from uvz.models.emailAddresses import EmailAddresses
 from uvz.utilities.decorators import validate_request_body
+from uvz.utilities.decorators import validate_token_in_body
 from django.views.decorators.http import require_POST, require_http_methods
-from django.db.models import Q
 
 
 @require_POST
