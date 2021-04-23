@@ -1,5 +1,4 @@
 from uvz.bot.bot import bot_run
-from apscheduler.executors.base import MaxInstancesReachedError
 from django.core.management.base import BaseCommand, CommandParser
 
 from apscheduler.schedulers.background import BackgroundScheduler
