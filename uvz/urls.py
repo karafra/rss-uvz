@@ -16,12 +16,14 @@ Including another URLconf
 from django.urls import path
 from django.contrib import admin
 from django.urls.conf import include
+
 from .rss.urls import urlpatterns as url_rss
 from .auth.urls import urlpatterns as url_auth
 from .database.urls import urlpatterns as url_db
 from .email.urls import urlpatterns as url_email
 from .admin.urls import urlpatterns as url_admin
 from .twitter.urls import urlpatterns as url_twitter
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

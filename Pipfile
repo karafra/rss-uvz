@@ -47,6 +47,13 @@ APScheduler = "==3.7.0"
 Django = "==3.2"
 PyJWT = "==2.0.1"
 PySocks = "==1.7.1"
+django-bootstrap = "*"
+django-allauth = "*"
+django-bootstrap4 = "*"
+django-postgresql = "*"
+multipledispatch = "*"
+dj-database-url = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

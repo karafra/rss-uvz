@@ -19,7 +19,8 @@ class Command(BaseCommand):
             self._log_info("Running scheduler")
             scheduler.start()
             self._log_info("Starting server")
-            call_command("runserver", f"0.0.0.0:{port}")
+            #call_command("runserver", f"0.0.0.0:{port}")
+            call_command("runserver")
         except KeyboardInterrupt:
             self._log_info("Stoping background job")
             scheduler.remove_all_jobs()

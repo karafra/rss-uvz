@@ -68,8 +68,3 @@ def get_lastest_rss_from_feed(request: HttpRequest):
     'link': 'https://www.uvzsr.sk/index.php?option=com_content&view=article&id=4692:175-vyhlaka-a-176-vyhlaka-uradu-verejneho-zdravotnictva-slovenskej-republiky&catid=250:koronavirus-2019-ncov&Itemid=153',
     'published': '2021-04-15T17:55:48Z'
 }
-
-{'title': '175. VYHLÁŠKA a 176. VYHLÁŠKA Úradu verejného zdravotníctva Slovenskej republiky',
-'description': '<p align="justify" style="margin-top: 0px; margin-bottom: 0px;"><span style="font-size: 10pt; font-family: arial, helvetica, sans-serif;"><a href="https://www.uvzsr.sk/docs/info/ut/vyhlaska_175.pdf" target="_blank">175. VYHLÁŠKA Úradu verejného zdravotníctva Slovenskej republiky, ktorou sa nariaďujú opatrenia pri ohrození verejného zdravia k povinnosti prekrytia horných dýchacích ciest</a><span><br /><br /><span><a href="https://www.uvzsr.sk/docs/info/ut/vyhlaska_176.pdf" target="_blank">176. VYHLÁŠKA Úradu verejného zdravotníctva\xa0Slovenskej republiky, ktorou sa nariaďujú opatrenia pri ohrození verejného zdravia ku karanténnym povinnostiam osôb po vstupe na územie Slovenskej republiky</a><span></span></span></span></span></p>',
-'link': 'https://www.uvzsr.sk/index.php?option=com_content&view=article&id=4692:175-vyhlaka-a-176-vyhlaka-uradu-verejneho-zdravotnictva-slovenskej-republiky&catid=250:koronavirus-2019-ncov&Itemid=153', 'published': '2021-04-15T17:55:48Z',
-'token': 'token'}

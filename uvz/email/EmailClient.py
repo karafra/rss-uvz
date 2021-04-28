@@ -17,8 +17,9 @@ class EmailClient(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args, **kwargs):
         self.kill_server()
+        
 
     def __init__(self) -> None:
         self.__server = smtplib.SMTP_SSL(

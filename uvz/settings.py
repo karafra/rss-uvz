@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dcrxggckdn%w()3*afs=dr7b)hl8x0t%-fxzhdta3w^y-h1bf^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = [
-    "uvz.herokuapp.com", 
+    "uvz.herokuapp.com",
     "127.0.0.1"
 ]
 
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    "bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -81,13 +86,10 @@ WSGI_APPLICATION = 'uvz.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(os.environ["DATABASE_URL"])
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -137,28 +139,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # API KEYS
 # GMAIL API config
 GMAIL_API_CONFIG = {
-  "web": {
-    "client_id": "29973129776-30to7tprmv25vlec7riikl75nlh3c9d1.apps.googleusercontent.com",
-    "project_id": "rss-uvz",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_secret": "FJNESCPmPfHjvFMs7VyHHmOh",
-    "redirect_uris": [
-      "https://rss-uvz.firebaseapp.com/__/auth/handler"
-    ],
-    "javascript_origins": [
-      "http://localhost",
-      "http://localhost:5000",
-      "https://rss-uvz.firebaseapp.com"
-    ]
-  }
+    "web": {
+        "client_id": "29973129776-30to7tprmv25vlec7riikl75nlh3c9d1.apps.googleusercontent.com",
+        "project_id": "rss-uvz",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "FJNESCPmPfHjvFMs7VyHHmOh",
+        "redirect_uris": [
+            "https://rss-uvz.firebaseapp.com/__/auth/handler"
+        ],
+        "javascript_origins": [
+            "http://localhost",
+            "http://localhost:5000",
+            "https://rss-uvz.firebaseapp.com"
+        ]
+    }
 }
 # Enable httpOnly cookies
 SESSION_COOKIE_PATH = '/;HttpOnly'
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
-# Url to redirect to 
+# Url to redirect to
 LOGIN_URL = "/"
 # Settings module path
 DJANGO_SETTINGS_MODULE = "uvz"
