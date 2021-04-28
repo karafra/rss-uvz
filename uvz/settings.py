@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dcrxggckdn%w()3*afs=dr7b)hl8x0t%-fxzhdta3w^y-h1bf^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False)
+DEBUG = os.environ.get("DEBUG", "False")
 
 ALLOWED_HOSTS = [
     "uvz.herokuapp.com",
@@ -50,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    "bootstrap4",
 ]
 
 MIDDLEWARE = [

@@ -19,11 +19,12 @@ class Command(BaseCommand):
         try:
             self._log_info("Running scheduler")
             scheduler.start()
-            self._log_info("Starting server")
-            if not settings.DEBUG:
-                call_command("runserver", f"0.0.0.0:{port}")
+            if settings.DEBUG == "True":
+                self._log_info("Startig dev server")
+                call_command("runserver")
                 return
-            call_command("runserver")
+            call_command("runserver", f"0.0.0.0:{port}")
+            self._log_info("Startig prod server")
         except KeyboardInterrupt:
             self._log_info("Stoping background job")
             scheduler.remove_all_jobs()
