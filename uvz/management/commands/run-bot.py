@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand, CommandParser
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.management import call_command
+from django.conf import settings
 class Command(BaseCommand):
 
     help = 'Runs the cronjobs'
@@ -19,7 +20,9 @@ class Command(BaseCommand):
             self._log_info("Running scheduler")
             scheduler.start()
             self._log_info("Starting server")
-            #call_command("runserver", f"0.0.0.0:{port}")
+            if not settings.DEBUG:
+                call_command("runserver", f"0.0.0.0:{port}")
+                return
             call_command("runserver")
         except KeyboardInterrupt:
             self._log_info("Stoping background job")
