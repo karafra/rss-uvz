@@ -79,8 +79,8 @@ def pop_key_from_list(old_dict):
     return new_dict
 
 
-def ammend_record(*records):
-    if len(records) == 1:
+def ammend_record(*records, as_tupple=False):
+    if len(records) == 1 and not as_tupple:
         return next(map(pop_key_from_list, records))
     return tuple(map(pop_key_from_list, records))
 
@@ -88,7 +88,7 @@ def ammend_record(*records):
 def is_new_record(token):
     records = get_records_from_db(token)
     db_record = get_last_record(token)
-    if ammend_record(db_record) in ammend_record(*records):
+    if ammend_record(db_record) in ammend_record(*records, as_tupple=True):
         return
     return db_record
 
